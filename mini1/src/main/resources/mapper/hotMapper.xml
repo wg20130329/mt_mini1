@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meitu.mini1.dao.HotDao">
+
+    <insert id="create" parameterType="com.meitu.mini1.entities.Hot" useGeneratedKeys="true">
+        insert into hot(hot_name,hot_number,hot_last_time) values(#{name},#{number},now());
+    </insert>
+
+    <update id="updateHot" parameterType="com.meitu.mini1.entities.Hot">
+        update hot set   hot_number = #{number}, hot_last_time = now() where hot_name = #{name}
+    </update>
+
+    <delete id="del" parameterType="java.lang.String" >
+        delete  from  hot where hot_name = #{name}
+    </delete>
+
+    <resultMap id="BaseResultMap" type="com.meitu.mini1.entities.Hot">
+        <id column="name" property="name" javaType="java.lang.String"></id>
+        <result column="number" property="number" javaType="java.lang.Double"></result>
+        <result column="lastTime" property="lastTime" javaType="java.util.Date"></result>
+    </resultMap>
+    <select id="getPayment" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select hot_name as name ,hot_number as number, hot_last_time as lastTime   from hot where hot_name = #{name};
+    </select>
+
+    <select id="getHotList" parameterType="java.util.Map" resultType="com.meitu.mini1.dto.HotDto">
+        SELECT hot_name AS name,hot_number AS number, hot_last_time AS lastTime FROM hot
+        WHERE hot_last_time > DATE_ADD(NOW(), INTERVAL - #{time} HOUR) ORDER BY number DESC  LIMIT 0,#{line};
+    </select>
+
+    <select id="finfHistList" resultType="com.meitu.mini1.dto.HotDto">
+        SELECT hot_name AS name,hot_number AS number, hot_last_time AS lastTime FROM hot ORDER BY hot_last_time DESC  LIMIT 0,10;
+    </select>
+</mapper>

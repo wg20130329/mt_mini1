@@ -73,7 +73,7 @@
           {
             title: "操作",
             slot: "action",
-            width: 180,
+            width: 250,
             align: "center"
           }
         ],
